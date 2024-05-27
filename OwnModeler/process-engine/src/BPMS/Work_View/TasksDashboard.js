@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Container, Table, ButtonGroup, Row, Col } from 'reactstrap';
 
 
-const TasksDashboard = () => {
+const TasksDashboard = ({user}) => {
     let [tasks, setTasks] = useState(null);
     let [externalTasks, setExternalTasks] = useState(null);
     const navigate = useNavigate();
@@ -20,8 +20,8 @@ const TasksDashboard = () => {
 
 
 
-    if (tasks === null) {
-        return <>Loading...</>;
+    if (tasks === null || externalTasks===null) {
+        return <div>Loading...</div>;
     }
 
     function completeTask(taskId) {
@@ -37,8 +37,9 @@ const TasksDashboard = () => {
         });
     }
 
-    const taskList = tasks.map(task => {
-        return <tr key={task.id}>
+    const taskList = tasks.map(task => { 
+        console.log("Hi");     
+        return (<tr key={task.id}>
             <td style={{ whiteSpace: 'nowrap' }}>{task.name}</td>
             <td>{task.assignee}</td>
             <td>{task.createTime}</td>
@@ -50,7 +51,7 @@ const TasksDashboard = () => {
                 </ButtonGroup>
             </td>
 
-        </tr>
+        </tr>);
     });
 
     const externalTaskList = externalTasks.map(task => {
@@ -69,7 +70,7 @@ const TasksDashboard = () => {
         </tr>
     });
 
-    return <div class="my-4 mx-4">
+    return <div className="my-4 mx-4">
         <Container fluid>
             <h3>Open Tasks</h3>
             <Table className="mt-4" hover>

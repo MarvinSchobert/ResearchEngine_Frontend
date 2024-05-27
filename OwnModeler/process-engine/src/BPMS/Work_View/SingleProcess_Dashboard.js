@@ -56,7 +56,7 @@ const SingleProcess_Dashboard = () => {
     }
 
     const taskList = tasks.map(task => {
-        return <tr key={task.id}>
+        return (<tr key={task.id}>
             <td style={{ whiteSpace: 'nowrap' }}>{task.name}</td>
             <td>{task.assignee}</td>
             <td>{task.createTime}</td>
@@ -68,7 +68,7 @@ const SingleProcess_Dashboard = () => {
                 </ButtonGroup>
             </td>
 
-        </tr>
+        </tr>);
     });
 
     return <div class="my-4 mx-4">

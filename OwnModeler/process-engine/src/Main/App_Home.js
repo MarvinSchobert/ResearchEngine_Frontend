@@ -1,20 +1,19 @@
 import React from 'react';
 import './App.css';
-import { Link } from 'react-router-dom';
-import { Button, Container, Card, CardHeader, CardBody, CardTitle, CardText, Row, Col } from 'reactstrap';
+import {  Container, Card, CardHeader, CardBody, CardTitle, CardText, Row, Col} from 'reactstrap';
 import FormatListNumberedRoundedIcon from '@mui/icons-material/FormatListNumberedRounded';
 import DesignServicesRoundedIcon from '@mui/icons-material/DesignServicesRounded';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import { useNavigate } from 'react-router-dom'
 
-const Home = () => {
+const Home = ({ loggedIn }) => {
     const navigate = useNavigate();
-    return (
-        <div>
-            <Container fluid className="mx-2 my-4">
+
+    const LoggedInStateDependentView = () => {
+        if (loggedIn) {
+            return (
                 <Row>
                     <Col>
-
                         <Card
                             onClick={() => navigate('/processes')}
                             color="primary"
@@ -108,6 +107,22 @@ const Home = () => {
                         </Card>
                     </Col>
                 </Row>
+            );
+        }
+        else {
+            return (
+                <Container>
+                    <img width="100%" src='https://developer.okta.com/assets-jekyll/blog/react-login/react-login-6afe2718d05b65ecdcfea2bfb316d0a47af174fad1e225d7e59a6b3619a41c3f.png' />                    
+                </Container>
+            );
+        }
+    }
+
+
+    return (
+        <div>
+            <Container fluid className="mx-2 my-4">
+                <LoggedInStateDependentView />
             </Container>
         </div>
     );

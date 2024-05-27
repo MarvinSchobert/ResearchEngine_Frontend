@@ -1,9 +1,29 @@
 import React, {Component} from 'react';
-import {Navbar, NavbarBrand, Container} from 'reactstrap';
+import {Navbar, NavbarBrand, Container, Button} from 'reactstrap';
 import {Link} from 'react-router-dom';
 
 
-function App_Navbar () {
+export default function App_Navbar ({loggedIn}) {
+  const logOut =  e => {
+    e.preventDefault();
+    sessionStorage.removeItem('token');
+    window.location.reload();
+  }
+    
+  const LoggedInStateDependentView = () => {
+      if (loggedIn){
+        return (
+          <div className="position-absolute end-0" style={{ marginRight : 10}}>
+            <Button tag={Link} onClick={logOut} style = {{ marginLeft : 10}}>Logout</Button>
+          </div>
+        );
+      }
+      else {
+        return      
+
+      }
+    }
+    
 
     return (
         <Navbar color="dark" dark expand="md"> 
@@ -28,9 +48,8 @@ function App_Navbar () {
                 }}
             />
             <NavbarBrand tag={Link} to="/" style = {{ marginLeft : 10 }}>Home</NavbarBrand>
-            <NavbarBrand tag={Link} to="/processes" style = {{ marginLeft : 10}}>Process List</NavbarBrand>
+            <LoggedInStateDependentView/>
+            
         </Navbar>
     );
 }
-
-export default App_Navbar;
