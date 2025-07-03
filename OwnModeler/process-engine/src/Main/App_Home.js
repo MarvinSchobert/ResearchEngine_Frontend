@@ -78,7 +78,7 @@ const Home = ({ loggedIn }) => {
                     <Col>
 
                         <Card
-                            onClick={() => navigate('/design')}
+                            onClick={() => navigate('/apps')}
                             color="secondary"
                             inverse
                             style={{
@@ -112,7 +112,8 @@ const Home = ({ loggedIn }) => {
         else {
             return (
                 <Container>
-                    <img width="100%" src='https://developer.okta.com/assets-jekyll/blog/react-login/react-login-6afe2718d05b65ecdcfea2bfb316d0a47af174fad1e225d7e59a6b3619a41c3f.png' />                    
+                    <img width="100%" style={{width:'100%'}}
+                    src='https://content.r9cdn.net/rimg/dimg/8c/27/2734909c-city-6518-159ad43913d.jpg?crop=true&width=1020&height=498' />                    
                 </Container>
             );
         }

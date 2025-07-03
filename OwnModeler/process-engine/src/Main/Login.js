@@ -5,7 +5,7 @@ import { Container, Form, FormGroup, Input, Label, Button } from 'reactstrap';
 
 function loginUser(credentials) {
     if (credentials.password == "password"){
-        return {token: "123"}
+        return {token: credentials.username}
     }
 }
 

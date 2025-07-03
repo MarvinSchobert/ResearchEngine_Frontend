@@ -6,6 +6,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import DesignServicesRoundedIcon from '@mui/icons-material/DesignServicesRounded';
 import AddTaskIcon from '@mui/icons-material/AddTask';
+import FormatShapesIcon from '@mui/icons-material/FormatShapes';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import Login from './Login';
 import PropTypes from 'prop-types'
 
@@ -32,11 +34,13 @@ export default function App_Sidebar({ loggedIn, setToken }) {
                         Tasks
                     </MenuItem>
                     <MenuItem
-                        component={<Link to="/design" className="link" />}
+                        component={<Link to="/apps" className="link" />}
                         icon={<DesignServicesRoundedIcon />}
                     >
-                        Designer
+                        App Designer
                     </MenuItem>
+                    
+                  
                 </div>
             );
         }

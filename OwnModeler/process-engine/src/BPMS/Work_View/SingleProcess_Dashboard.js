@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Container, Table, ButtonGroup, Row, Col } from 'reactstrap';
+import { Button, Container, Table, ButtonGroup, Row, Col, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import TaskView from './TaskView';
 
 
-const SingleProcess_Dashboard = () => {
+const SingleProcess_Dashboard = ({id}) => {
     let [processDiagram, setProcessDiagram] = useState("");
     let [processInstance, setProcessInstance] = useState(null);
     let [tasks, setTasks] = useState(null);
-    const { id } = useParams();
+    let [selectedTask, setSelectedTask] = useState(null);
+    let [activeTab, setActiveTab] = useState ('1');
+  
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        if (tasks != null) {
+            setSelectedTask(tasks[0])
+        }
+    }, [tasks])
 
     useEffect(() => {
 
@@ -25,7 +35,7 @@ const SingleProcess_Dashboard = () => {
 
         fetch(`/flowable-ui/process-api/runtime/process-instances/${id}`)
             .then(response => response.json())
-            .then(response => setProcessInstance(response) | console.log(processInstance) | response.processDefinitionId)
+            .then(response => setProcessInstance(response) | response.processDefinitionId)
             ;
 
 
@@ -38,9 +48,11 @@ const SingleProcess_Dashboard = () => {
 
 
 
-    if (tasks === null || processInstance === null) {
+    if (id === null || id === "" || tasks === null || processInstance === null) {
         return <>Loading...</>;
     }
+
+    // TODO: Ab hier das Taskview-Fenster einbetten (Siehe TasksDashboard)
 
     function completeTask(taskId) {
         fetch(`/flowable-ui/process-api/runtime/tasks/${taskId}`, {
@@ -56,31 +68,26 @@ const SingleProcess_Dashboard = () => {
     }
 
     const taskList = tasks.map(task => {
-        return (<tr key={task.id}>
+        console.log("Form ID: " + task.formKey)
+        return (<tr key={task.id} onClick={() => {setSelectedTask(task); console.log ("Clicked " + task.name)}}>
             <td style={{ whiteSpace: 'nowrap' }}>{task.name}</td>
             <td>{task.assignee}</td>
             <td>{task.createTime}</td>
-            <td>{JSON.stringify(task.variables, null, 2)}</td>
-
-            <td>
-                <ButtonGroup>
-                    <Button size="sm" style={{ width: '100px', height: '30px' }} color="primary" onClick={() => completeTask(task.id)}>Complete</Button>
-                </ButtonGroup>
-            </td>
-
         </tr>);
     });
 
     return <div class="my-4 mx-4">
         <Container>
-            <Row>
-                <Col >
-                    <img src={processDiagram} alt='No Process Diagram available.'></img>
+            <Row style={{border: '2px solid rgb(175, 174, 174)'}}>
+                <Col xs="auto">
+               
+                    <img style={{ verticalAlign:'center', width:'100%'}}  src={processDiagram} alt='No Process Diagram available.'></img>
+                    
                 </Col>
-                <Col xs="4">
+                <Col >
                     <Row>
-                        <Button onClick={() => { navigate("/modeller/" + processInstance.processDefinitionId) }}>Edit Process Definition</Button>
-
+                        {//<Button onClick={() => { navigate("/modeller/" + processInstance.processDefinitionId) }}>Edit Process Definition</Button>
+                        }
                         <Table hover>
                             <thead>
                                 <tr>
@@ -90,15 +97,15 @@ const SingleProcess_Dashboard = () => {
                             </thead>
                             <tbody>
                                 <tr key="1">
-                                    <td>Prozess-Name:</td>
+                                    <td>Prozessname:</td>
                                     <td>{processInstance.processDefinitionName}</td>
                                 </tr>
                                 <tr key="2">
-                                    <td>Starter (User):</td>
+                                    <td>Starteruser:</td>
                                     <td>{processInstance.startUserId}</td>
                                 </tr>
                                 <tr key="3">
-                                    <td>Start (Datum):</td>
+                                    <td>Startdatum:</td>
                                     <td>{new Date(processInstance.startTime).toLocaleString()}</td>
                                 </tr>
                                 <tr key="4">
@@ -110,21 +117,77 @@ const SingleProcess_Dashboard = () => {
                     </Row>
                 </Col>
             </Row>
+            <br></br>
+            <Row>
+                <Nav tabs>
+                    <NavItem>
+                        <NavLink
+                            active= {activeTab === '1'}
+                            onClick={() => setActiveTab ('1')}
+                        >
+                            Offene Aufgaben
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                           active= {activeTab === '2'}
+                            onClick={() => setActiveTab ('2')}
+                        >
+                            Personen
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                           active= {activeTab === '3'}
+                            onClick={() => setActiveTab ('3')}
+                        >
+                            Audit
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                           active= {activeTab === '4'}
+                            onClick={() => setActiveTab ('4')}
+                        >
+                            Kommentare und Anhänge
+                        </NavLink>
+                    </NavItem>
+                </Nav>  
+                <TabContent activeTab= {activeTab}>
+                    <TabPane tabId="1">
+                        <Row>
+                        <Col>
+                    <Table className="mt-4" hover>
+                        <thead>
+                            <tr>
+                                <th width="20%">Task Name</th>
+                                <th width="10%">Assignee</th>
+                                <th width="20%">Create Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {taskList}
+                        </tbody>
+                    </Table>
+                </Col>
+                <Col>
+                    <TaskView task={selectedTask} />
+                </Col>
+                        </Row>
+                    </TabPane>
+                    <TabPane tabId="2">
+                        <Row>
+                            <Col sm="12">
+                                <h4 className='mt-4'>Tab 2 Contents</h4>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                </TabContent>
 
-            <Table className="mt-4" hover>
-                <thead>
-                    <tr>
-                        <th width="20%">Task Name</th>
-                        <th width="10%">Assignee</th>
-                        <th width="20%">Create Time</th>
-                        <th width="40%">Variables</th>
-                        <th width="10%">Complete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {taskList}
-                </tbody>
-            </Table>
+
+
+                
+            </Row>
         </Container>
     </div>
 }
